@@ -98,7 +98,46 @@ const movies = {
 };
 
 class Example2 extends Component {
+  // FROM BEST SOLUTION
+  //   constructor(props) {
+  //   super(props);
+  //   this.usersByMovie = {};
+
+  //   profiles.forEach(profile => {
+  //     const movieID = profile.favoriteMovieID;
+
+  //     if (this.usersByMovie[movieID]) {
+  //       this.usersByMovie[movieID].push(profile.userID);
+  //     } else {
+  //       this.usersByMovie[movieID] = [profile.userID];
+  //     }
+  //   });
+  // }
+
+
+  // MY SECOND SOLUTION
+  // state = {
+  //   likedByUsers: {}
+  // }
+
+  // componentDidMount() {
+  //   let likedByUsers = {};
+  //   for (const el of profiles) {
+  //     const movieID = el.favoriteMovieID;
+  //     if (likedByUsers[movieID]) {
+  //       likedByUsers[movieID].push(el.userID);
+  //     } else {
+  //       likedByUsers[movieID] = [el.userID];
+  //     }
+  //   }
+  //   this.setState({likedByUsers})
+  // }
+
+
   render() {
+    // MY SECOND SOLUTION
+    // const { likedByUsers } = this.state;
+
     return (
       <div className="App">
         <h2>How Popular is Your Favorite Movie?</h2>
@@ -107,8 +146,20 @@ class Example2 extends Component {
           if (!likedBy.length) {
             return <Empty key={movie} name={movies[movie].name} />
           }
-          return <UserList  key={movie} name={movies[movie].name} list={likedBy} users={users}/>
+          return <UserList key={movie} name={movies[movie].name} list={likedBy} users={users}/>
         })}
+
+
+        {/* MY SECOND SOLUTION */}
+        {/* {!!Object.keys(likedByUsers).length && (
+          Object.keys(movies).map((movie) => {
+            const likedBy = likedByUsers[movie];
+            if (!likedBy) {
+              return <Empty key={movie} name={movies[movie].name} />
+            }
+            return <UserList key={movie} name={movies[movie].name} list={likedBy} users={users}/>
+          })
+        )} */}
       </div>
     );
   }
