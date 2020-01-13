@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Route, Link } from "react-router-dom";
+
 import Contacts from './Contacts/index';
 import Example1 from './Example1/index';
 import Example2 from './Example2/index';
@@ -9,38 +11,29 @@ import Example6 from './Example6/index';
 import Example7 from './Example7/index';
 import Example8 from './Example8/index';
 
-
 import './App.css';
 
-function App() {
-  const [list, setList] = useState([
-    {show: false}, {show: false}, {show: false}, {show: false},
-    {show: false}, {show: false}, {show: false}, {show: false},  {show: true}
-  ]);
+function App(props) {
 
-  const onClick = (id) => {
-    const newList = list.map((el, i) => i === id ? {show: true} : {show: false});
-    setList(newList);
-  }
-
-
+  console.log('props', props)
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20, padding: 20 }}>
-        <button disabled={list[0].show} onClick={() => {onClick(0)}}> Contacts </button>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map(el => (
-          <button key={el} disabled={list[el].show} onClick={() => {onClick(el)}}> Example{el} </button>
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(el => (
+          <Link key={el} to={!el ? `/contacts` :`/example${el}`}>
+            {el === 0 ? `contacts` :`example${el}`}
+          </Link>
         ))}
       </div>
-      {list[0].show && <Contacts />}
-      {list[1].show && <Example1 />}
-      {list[2].show && <Example2 />}
-      {list[3].show && <Example3 />}
-      {list[4].show && <Example4 />}
-      {list[5].show && <Example5 />}
-      {list[6].show && <Example6 />}
-      {list[7].show && <Example7 />}
-      {list[8].show && <Example8 />}
+      <Route path='/contacts' render={(history) => <Contacts history={history}/> } />
+      <Route path="/example1" component={Example1} />
+      <Route path="/example2" component={Example2} />
+      <Route path="/example3" component={Example3} />
+      <Route path="/example4" component={Example4} />
+      <Route path="/example5" component={Example5} />
+      <Route path="/example6" component={Example6} />
+      <Route path="/example7" component={Example7} />
+      <Route path="/example8" component={Example8} />
     </div>
   );
 }

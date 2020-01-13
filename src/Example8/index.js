@@ -1,14 +1,21 @@
 import React from 'react';
 
 class Pure extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      update: props.toggle,
-    };
-  }
+  // don't use props in constructor
+  // constructor() {
+  //   // super(props);
+  //   // this.state = {
+  //   //   update: props.toggle,
+  //   // };
+  //   super();
+  //   this.state = {
+  //     lala: 'fds'
+  //   }
+  // }
+  
 
   render() {
+      console.log(this.props)
     return (
       <strong>
         <span style={{ color: 'mediumseagreen' }}>Pure: </span>
