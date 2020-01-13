@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
+import * as API from './api';
 
 class ListContacts extends Component {
+
+  remove = async (el) => {
+    await API.remove(el);
+    this.props.getAll();
+  } 
+
   render() {
     const {contacts} = this.props;
     return (
@@ -15,7 +22,7 @@ class ListContacts extends Component {
               <p>{el.name}</p>
               <p>{el.handle}</p>
             </div>
-            <button className="contact-remove">
+            <button onClick={() => this.remove(el)} className="contact-remove">
               Remove
             </button>
           </li>
