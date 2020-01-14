@@ -15,7 +15,6 @@ class Pure extends React.PureComponent {
   
 
   render() {
-      console.log(this.props)
     return (
       <strong>
         <span style={{ color: 'mediumseagreen' }}>Pure: </span>

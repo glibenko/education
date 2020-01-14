@@ -6,12 +6,13 @@ import Search from './Search';
 class ListContacts extends Component {
   state = {
     contacts: [],
-    query: ''
+    query: '',
+    filtredContacts: [],
   }
 
   componentDidMount() {
     API.getAll().then((contacts) =>
-      this.setState({ contacts })
+      this.setState({ contacts, filtredContacts: contacts })
     )
   }
 
@@ -24,30 +25,41 @@ class ListContacts extends Component {
   }
 
   handleSearch = (e) => {
-    this.setState({ query: e.target.value })
+    const { contacts } = this.state;
+    // i think it's better
+    const showingContacts = e.target.value === ''
+      ? contacts
+      : contacts.filter((c) => (
+          c.name.toLowerCase().includes(e.target.value.toLowerCase())
+        ))
+
+    this.setState({ query: e.target.value, filtredContacts: showingContacts});
+
   }
 
   clearQuery = () => {
-    this.setState({ query: '' })
+    const { contacts } = this.state;
+    this.setState({ query: '', filtredContacts: contacts })
   }
 
   render() {
-    const { contacts, query } = this.state;
+    const { contacts, query, filtredContacts } = this.state;
     const { match } = this.props;
 
-    const showingContacts = query === ''
-      ? contacts
-      : contacts.filter((c) => (
-          c.name.toLowerCase().includes(query.toLowerCase())
-        ))
+    // filter at course
+    // const showingContacts = query === ''
+    //   ? contacts
+    //   : contacts.filter((c) => (
+    //       c.name.toLowerCase().includes(query.toLowerCase())
+    //     ))
 
     return (
       <div>
         <Search query={query} onChange={this.handleSearch} match={match} />
-        <List contacts={showingContacts} remove={this.remove} />
-        {showingContacts.length !== contacts.length && (
+        <List contacts={filtredContacts} remove={this.remove} />
+        {filtredContacts.length !== contacts.length && (
           <div className='showing-contacts'>
-            <span>Now showing {showingContacts.length} of {contacts.length}</span>
+            <span>Now showing {filtredContacts.length} of {contacts.length}</span>
             <button onClick={this.clearQuery}>Show all</button>
           </div>
         )}
