@@ -18,9 +18,15 @@ class ListContacts extends Component {
 
   remove = (el) => {
     API.remove(el).then((contact) => {
-      this.setState((prevState) => 
-        ({contacts: prevState.contacts.filter(el => el.id !== contact.id) })
-      )
+      this.setState((prevState) => {
+        const newContacts = prevState.contacts.filter(el => el.id !== contact.id);
+        const showingContacts = prevState.query === ''
+        ? newContacts
+        : newContacts.filter((c) => (
+            c.name.toLowerCase().includes(prevState.query.toLowerCase())
+          ))
+        return { contacts: newContacts, filtredContacts: showingContacts }
+      })
     })
   }
 
