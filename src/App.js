@@ -13,20 +13,21 @@ import Example8 from './Example8/index';
 
 import './App.css';
 
-function App(props) {
-
-  console.log('props', props)
+function App() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20, padding: 20 }}>
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(el => (
-          <Link key={el} to={!el ? `/contacts` :`/example${el}`}>
+          <Link
+            style={{ padding: 10, backgroundColor: '#ccc', marginLeft: 10, borderRadius: 6 }}
+            key={el} to={!el ? `/contacts` :`/example${el}`}
+          >
             {el === 0 ? `contacts` :`example${el}`}
           </Link>
         ))}
       </div>
-      <Route path='/contacts' render={(history) => <Contacts history={history}/> } />
-      <Route path="/example1" component={Example1} />
+      <Route path='/contacts' component={Contacts} />
+      <Route path="/example1" render={() => <Example1/> } />
       <Route path="/example2" component={Example2} />
       <Route path="/example3" component={Example3} />
       <Route path="/example4" component={Example4} />

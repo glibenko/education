@@ -1,27 +1,57 @@
 import React, { Component } from 'react';
+import * as API from './api';
+import List from './List';
+import Search from './Search';
 
 class ListContacts extends Component {
+  state = {
+    contacts: [],
+    query: ''
+  }
+
+  componentDidMount() {
+    API.getAll().then((contacts) =>
+      this.setState({ contacts })
+    )
+  }
+
+  remove = (el) => {
+    API.remove(el).then((contact) => {
+      this.setState((prevState) => 
+        ({contacts: prevState.contacts.filter(el => el.id !== contact.id) })
+      )
+    })
+  }
+
+  handleSearch = (e) => {
+    this.setState({ query: e.target.value })
+  }
+
+  clearQuery = () => {
+    this.setState({ query: '' })
+  }
 
   render() {
-    const {contacts, remove} = this.props;
+    const { contacts, query } = this.state;
+    const { match } = this.props;
+
+    const showingContacts = query === ''
+      ? contacts
+      : contacts.filter((c) => (
+          c.name.toLowerCase().includes(query.toLowerCase())
+        ))
+
     return (
-      <ol className="contact-list">
-        {contacts.map((el) => (
-          <li key={el.id} className="contact-list-item">
-            <div
-              className="contact-avatar"
-              style={{ backgroundImage: `url(${el.avatarURL})`}}
-            />
-            <div className="contact-details">
-              <p>{el.name}</p>
-              <p>{el.handle}</p>
-            </div>
-            <button onClick={() => remove(el)} className="contact-remove">
-              Remove
-            </button>
-          </li>
-        ))}
-      </ol>
+      <div>
+        <Search query={query} onChange={this.handleSearch} match={match} />
+        <List contacts={showingContacts} remove={this.remove} />
+        {showingContacts.length !== contacts.length && (
+          <div className='showing-contacts'>
+            <span>Now showing {showingContacts.length} of {contacts.length}</span>
+            <button onClick={this.clearQuery}>Show all</button>
+          </div>
+        )}
+      </div>
     )
   }
 }
