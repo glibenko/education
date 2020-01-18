@@ -12,46 +12,98 @@ const combineActions = (actions) => {
   })
   return obj;
 }
-
 const actions = combineActions(ownActions);
+
+const ADD_GOAL = 'ADD_GOAL';
+const REMOVE_GOAL = 'REMOVE_GOAL';
 
 export default class Example9 extends Component {
   state = {
     todos: [],
     goals: [],
+    todoVal: '',
+    goalVal: ''
   }
   componentDidMount() {
-    store.subscribe(() => {
+    const dataStore = store.getState();
+    if (dataStore) {
+      this.setState(prevState => ({...prevState, ...store.getState()}))
+    }
+    this.store = store.subscribe(() => {
       console.log('the new state is')
-      this.setState(store.getState())
+      this.setState(prevState => ({...prevState, ...store.getState()}))
     });
   }
 
-  addGoal = () => {
-    store.dispatch(actions.addGoal({
-      id: 0,
-      name: 'first try'
-    }));
+  componentWillUnmount() {
+    console.log('componentWillUnmount')
+    this.store()
   }
 
-    add = () => {
-      const data = {
-        id: 0,
-        name: 'first try',
-        complete: false
-      }
-      actions.addTodo(data)
+  addGoalAction = goal => {
+    return {
+      type: ADD_GOAL,
+      goal
     }
+  }
+
+  deleteGoalAction = id => {
+    return {
+      type: REMOVE_GOAL,
+      id
+    }
+  }
+
+  addGoal = () => {
+    const state = store.getState();
+    let data = {
+      id: 1,
+      name: this.state.goalVal,
+    }
+    if (state?.goals?.length) {
+      const goals = state.goals.map(el => el.id);
+      data.id = Math.max(...goals) + 1;
+      store.dispatch(this.addGoalAction(data))
+    } else {
+      store.dispatch(this.addGoalAction(data))
+    }
+  }
+
+  deleteGoal = (id) => {
+    console.log('this.addGoalAction(id)', this.deleteGoalAction(id))
+    store.dispatch(this.deleteGoalAction(id))
+  }
   
-
   render() {
+    const {todos, goals, todoVal, goalVal} = this.state;
 
-    console.log('this.state', this.state)
     return (
       <div className="App">
-        <h2>Redux</h2>
-        <button onClick={this.add}> add </button>
-        <button onClick={this.addGoal}> add </button>
+        <h2>My own Redux</h2>
+        <div>
+        <div>
+          <input type="text" value={todoVal} onChange={(e) => this.setState({todoVal: e.target.value})} />
+          <button onClick={() => actions.addTodo(todoVal)}> addTodo </button>
+          <ol>
+            {todos?.map((el) => (
+              <ul onClick={() => actions.deleteTodo(el.id)} key={el.id}>
+                {el.name}
+              </ul>
+            ))}
+          </ol>
+        </div>
+        <div>
+          <input type="text" value={goalVal} onChange={(e) => this.setState({goalVal: e.target.value})} />
+          <button onClick={this.addGoal}> addGoal </button>
+          <ol>
+            {goals?.map((el) => (
+              <ul onClick={() => this.deleteGoal(el.id)} key={el.id}>
+                {el.name}
+              </ul>
+            ))}
+          </ol>
+        </div>
+        </div>
       </div>
     )
   }
