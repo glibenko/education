@@ -11,14 +11,16 @@ import Example6 from './Example6/index';
 import Example7 from './Example7/index';
 import Example8 from './Example8/index';
 import Example9 from './Example9/index';
+import Example10 from './Example10/index';
 
 import './App.css';
 
-function App() {
+function App({store}) {
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20, padding: 20 }}>
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => (
           <Link
             style={{ padding: 10, backgroundColor: '#ccc', marginLeft: 10, borderRadius: 6 }}
             key={el} to={!el ? `/contacts` :`/example${el}`}
@@ -37,6 +39,7 @@ function App() {
       <Route path="/example7" component={Example7} />
       <Route path="/example8" component={Example8} />
       <Route path="/example9" component={Example9} />
+      <Route path="/example10" render={() => <Example10 store={store}/>} />
     </div>
   );
 }

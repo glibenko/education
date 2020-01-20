@@ -1,55 +1,17 @@
 import React, { Component } from 'react';
-// import createStore from '../store';
-import { createStore,  applyMiddleware} from 'redux';
-import combineReducers from '../reducers';
+
 import * as ownActions from './actions';
 
 
-const middleware = store => next => action => {
-  if (action?.goal?.name?.toLowerCase().includes('bitcoin')) {
-    console.warn('you should not use it')
-  }
-  return next(action);
-}
-
-const logger = store => next => action => {
-  console.group(action.type);
-  console.log('action: ', action);
-  const result = next(action);
-  console.log('next state: ', store.getState() );
-  console.groupEnd();
-  return result;
-}
-
-const greatGoal = store => next => action => {
-  if (action.type === 'ADD_GOAL') {
-    console.log("That's a great goal!");
-  }
-  return next(action)
-}
-
-const store = createStore(combineReducers, applyMiddleware(middleware, logger, greatGoal));
-
-
-// //own store
-// const store = createStore(combineReducers);
-// const middleware = (store, action) => {
-//   if (action.goal.name.toLowerCase().includes('bitcoin')) {
-//     console.warn('you should not use it')
-//   }
-//   return store.dispatch(action)
+// const combineActions = (actions) => {
+//   let obj = {};
+//   Object.keys(actions).forEach(el => {
+//     obj[el] = (data) => ownActions[el](data)(store.dispatch, store.getState)
+//   })
+//   return obj;
 // }
-
-
-
-const combineActions = (actions) => {
-  let obj = {};
-  Object.keys(actions).forEach(el => {
-    obj[el] = (data) => ownActions[el](data)(store.dispatch, store.getState)
-  })
-  return obj;
-}
-const actions = combineActions(ownActions);
+// const actions = combineActions(ownActions);
+const actions = () => '';
 
 const ADD_GOAL = 'ADD_GOAL';
 const REMOVE_GOAL = 'REMOVE_GOAL';
@@ -62,20 +24,13 @@ export default class Example9 extends Component {
     goalVal: ''
   }
   componentDidMount() {
-    const dataStore = store.getState();
-    if (dataStore) {
-      this.setState(prevState => ({...prevState, ...store.getState()}))
-    }
-    this.store = store.subscribe(() => {
-      // console.log('the new state is')
-      this.setState(prevState => ({...prevState, ...store.getState()}))
-    });
+    console.log('this.props', this.props)
   }
 
-  componentWillUnmount() {
-    console.log('componentWillUnmount')
-    this.store()
-  }
+  // componentWillUnmount() {
+  //   console.log('componentWillUnmount')
+  //   this.store()
+  // }
 
   addGoalAction = goal => {
     return {
@@ -92,6 +47,7 @@ export default class Example9 extends Component {
   }
 
   addGoal = () => {
+    const { store } = this.props;
     const state = store.getState();
     let data = {
       id: 1,
@@ -107,6 +63,7 @@ export default class Example9 extends Component {
   }
 
   deleteGoal = (id) => {
+    const { store } = this.props;
     console.log('this.addGoalAction(id)', this.deleteGoalAction(id))
     store.dispatch(this.deleteGoalAction(id))
   }
