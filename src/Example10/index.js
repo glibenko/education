@@ -1,36 +1,22 @@
 import React, { Component } from 'react';
-
-import * as ownActions from './actions';
-
-
-// const combineActions = (actions) => {
-//   let obj = {};
-//   Object.keys(actions).forEach(el => {
-//     obj[el] = (data) => ownActions[el](data)(store.dispatch, store.getState)
-//   })
-//   return obj;
-// }
-// const actions = combineActions(ownActions);
-const actions = () => '';
-
 const ADD_GOAL = 'ADD_GOAL';
 const REMOVE_GOAL = 'REMOVE_GOAL';
 
 export default class Example9 extends Component {
   state = {
-    todos: [],
-    goals: [],
     todoVal: '',
     goalVal: ''
   }
   componentDidMount() {
-    console.log('this.props', this.props)
+    this.store = this.props.store.subscribe(() => {
+      this.forceUpdate();
+    });
   }
 
-  // componentWillUnmount() {
-  //   console.log('componentWillUnmount')
-  //   this.store()
-  // }
+  componentWillUnmount() {
+    console.log('componentWillUnmount')
+    this.store()
+  }
 
   addGoalAction = goal => {
     return {
@@ -44,6 +30,14 @@ export default class Example9 extends Component {
       type: REMOVE_GOAL,
       id
     }
+  }
+
+  API = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('_async');
+      }, 1000);
+    });
   }
 
   addGoal = () => {
@@ -62,30 +56,34 @@ export default class Example9 extends Component {
     }
   }
 
+  handleDelete = (id) => {
+    return async (dispatch) => {
+      // this.deleteGoalAction(id);
+
+      const api = await this.API();
+      
+      console.log('api', api);
+
+      dispatch(this.deleteGoalAction(id));
+
+    }
+  }
+
   deleteGoal = (id) => {
     const { store } = this.props;
-    console.log('this.addGoalAction(id)', this.deleteGoalAction(id))
-    store.dispatch(this.deleteGoalAction(id))
+    // console.log('this.addGoalAction(id)', this.deleteGoalAction(id))
+    // store.dispatch(this.deleteGoalAction(id))
+    store.dispatch(this.handleDelete(id))
   }
   
   render() {
-    const {todos, goals, todoVal, goalVal} = this.state;
+    const {goalVal} = this.state;
+    const {goals} = this.props.store.getState();
 
     return (
       <div className="App">
         <h2>My own Redux</h2>
         <div>
-        <div>
-          <input type="text" value={todoVal} onChange={(e) => this.setState({todoVal: e.target.value})} />
-          <button onClick={() => actions.addTodo(todoVal)}> addTodo </button>
-          <ol>
-            {todos?.map((el) => (
-              <ul onClick={() => actions.deleteTodo(el.id)} key={el.id}>
-                {el.name}
-              </ul>
-            ))}
-          </ol>
-        </div>
         <div>
           <input type="text" value={goalVal} onChange={(e) => this.setState({goalVal: e.target.value})} />
           <button onClick={this.addGoal}> addGoal </button>

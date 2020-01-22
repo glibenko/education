@@ -19,8 +19,17 @@ const logger = store => next => action => {
   return result;
 }
 
+const thunk = store => next => action => {
+  if (typeof action === 'function') {
+    console.log('function');
+    return action(store.dispatch, store.getState);
+  }
+    console.log('not function');
+  return next(action)
+}
+
 // const store = createStore(combineReducers);
-const store = createStore(combineReducers({todos, goals}), applyMiddleware(logger));
+const store = createStore(combineReducers({todos, goals}), applyMiddleware(logger, thunk));
 
 ReactDOM.render(
   <BrowserRouter>
