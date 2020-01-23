@@ -57,4 +57,12 @@ const mapStateToProps = (state) => ({
   all: state
 });
 
+// const mapDispatchToProps = (dispatch) => ({
+//   let obj = {};
+//   Object.keys(actions).forEach(el => {
+//     obj[el] = (dispatch, data) => dispatch(ownActions[el](data))
+//   })
+//   return obj;
+// });
+
 export default connect(mapStateToProps)(Example11);
