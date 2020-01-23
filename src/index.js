@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore,  applyMiddleware, combineReducers} from 'redux';
 import todos from './reducers/todos';
 import goals from './reducers/goals';
+import { goals11 } from './Example11/reducers';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from "react-router-dom";
@@ -30,7 +31,7 @@ const thunk = store => next => action => {
 }
 
 // const store = createStore(combineReducers);
-const store = createStore(combineReducers({todos, goals}), applyMiddleware(logger, thunk));
+const store = createStore(combineReducers({todos, goals, goals11}), applyMiddleware(thunk, logger));
 
 ReactDOM.render(
   <BrowserRouter>
