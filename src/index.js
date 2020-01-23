@@ -7,6 +7,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
+import Provider from './context';
 // import createStore from './store';
 // import combineReducers from './reducers';
 
@@ -33,7 +34,9 @@ const store = createStore(combineReducers({todos, goals}), applyMiddleware(logge
 
 ReactDOM.render(
   <BrowserRouter>
-    <App store={store} />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </BrowserRouter>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
