@@ -18,8 +18,11 @@ const connect = (mapStateToProps, mapDispatchToPtops) => (Component) => {
       const {dispatch, getState} = this.props.store;
       const state = getState();
       const stateNeeded = mapStateToProps(state);
+      const actions = mapDispatchToPtops(dispatch);
 
-      return <Component {...stateNeeded} dispatch={dispatch} />
+      console.log('actions', actions);
+
+      return <Component {...stateNeeded} {...actions} dispatch={dispatch} />
     }
   }
 

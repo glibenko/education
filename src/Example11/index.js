@@ -2,17 +2,6 @@ import React, { Component } from 'react';
 import connect from '../connect';
 import * as ownActions from './actions';
 
-const combineActions = (actions) => {
-  let obj = {};
-  Object.keys(actions).forEach(el => {
-    obj[el] = (dispatch, data) => dispatch(ownActions[el](data))
-  })
-  return obj;
-}
-
-const actions = combineActions(ownActions);
-
-
 class Example11 extends Component {
   state = {
     todoVal: '',
@@ -20,15 +9,17 @@ class Example11 extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    // const { dispatch } = this.props;
     setTimeout(() => {
-      actions.loadData(dispatch);
+      this.props.actions.loadData();
     }, 1000);
   }
 
   render() {
     const {goalVal} = this.state;
-    const { dispatch, goals: { data, loaded } } = this.props;
+    const {goals: { data, loaded }, actions} = this.props;
+
+    console.log('dd', this.props)
 
     return (
       <div className="App">
@@ -36,11 +27,11 @@ class Example11 extends Component {
         <div>
         <div>
           <input type="text" value={goalVal} onChange={(e) => this.setState({goalVal: e.target.value})} />
-          <button onClick={() => actions.addGoals(dispatch, goalVal)}> addGoal </button>
+          <button onClick={() => actions.addGoals(goalVal)}> addGoal </button>
           <ol>
             {!loaded && (<div> Loading... </div>)}
             {data?.map((el) => (
-              <ul onClick={() => actions.deleteGoal(dispatch, el)} key={el.id}>
+              <ul onClick={() => actions.deleteGoal(el)} key={el.id}>
                 {el.name}
               </ul>
             ))}
@@ -57,12 +48,18 @@ const mapStateToProps = (state) => ({
   all: state
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   let obj = {};
-//   Object.keys(actions).forEach(el => {
-//     obj[el] = (dispatch, data) => dispatch(ownActions[el](data))
-//   })
-//   return obj;
-// });
+const combineActions = (actions, dispatch) => {
+  let obj = {};
+  Object.keys(actions).forEach(el => {
+    obj[el] = (data) => dispatch(ownActions[el](data))
+  })
+  return obj;
+}
 
-export default connect(mapStateToProps)(Example11);
+const mapDispatchToProps = (dispatch) => ({
+  actions: combineActions(ownActions, dispatch)
+});
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Example11);
